@@ -5,16 +5,40 @@ VisualStudioVersion = 15.0.28307.106
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess", "Chess\Chess.csproj", "{CE05B454-C47C-468B-9BE2-8D294E0F378E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menú", "Menú\Menú.csproj", "{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logica", "Logica\Logica.csproj", "{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE05B454-C47C-468B-9BE2-8D294E0F378E}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{CE05B454-C47C-468B-9BE2-8D294E0F378E}.Debug|x86.ActiveCfg = Debug|x86
 		{CE05B454-C47C-468B-9BE2-8D294E0F378E}.Debug|x86.Build.0 = Debug|x86
+		{CE05B454-C47C-468B-9BE2-8D294E0F378E}.Release|Any CPU.ActiveCfg = Release|x86
 		{CE05B454-C47C-468B-9BE2-8D294E0F378E}.Release|x86.ActiveCfg = Release|x86
 		{CE05B454-C47C-468B-9BE2-8D294E0F378E}.Release|x86.Build.0 = Release|x86
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD8BFD81-A156-4223-A0AD-6A8DBE0FFB0B}.Release|x86.Build.0 = Release|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Debug|x86.Build.0 = Debug|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Release|x86.ActiveCfg = Release|Any CPU
+		{04D41C3D-1C2F-4AE6-9ED9-11CF1E6FD08F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
