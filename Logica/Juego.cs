@@ -9,7 +9,6 @@ namespace Logica
     class Juego
     {
         private bool turnoBlancas;
-        private bool endGame;
         private Tablero tablero;
         private Jugador jugador1;
         private Jugador jugador2;
@@ -17,7 +16,7 @@ namespace Logica
 
         public void iniciarJuego()
         {
-
+            tablero.colocarPiezaInicio();
         }
 
         public void recibirMovimiento()

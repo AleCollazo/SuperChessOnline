@@ -40,5 +40,15 @@ namespace Logica
         {
             this.enroqueLargo = enroqueLargo;
         }
+
+        public bool isBlanco()
+        {
+            return blanco;
+        }
+
+        public bool isLocal()
+        {
+            return local;
+        }
     }
 }
