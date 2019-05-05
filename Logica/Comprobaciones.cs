@@ -33,7 +33,7 @@ namespace Logica
             return coordenadas;
         }
 
-        public bool EsUnaPiezaDelJugador()
+        public bool esUnaPiezaDelJugador()
         {
             if (jugadorTurno.isBlanco())
             {
@@ -51,7 +51,7 @@ namespace Logica
 
             if (piezaTablero != null)
             {
-                if (pieza < 'Z' && piezaTablero > 'Z') return true;
+                if (pieza < 'Z' && piezaTablero < 'Z') return true;
 
                 if (pieza > 'Z' && piezaTablero > 'Z') return true;
             }
@@ -60,7 +60,26 @@ namespace Logica
 
         public bool movimientoCorrectoPieza()
         {
-            return true;
+            int[] coordIniciales = descomponerPosicion(posicionInicial);
+            int[] coordFinales = descomponerPosicion(posicionFinal);
+
+            switch (pieza)
+            {
+                case 'T':
+                    return movimientoPieza.torre(coordIniciales[0],coordFinales[0], coordIniciales[1], coordFinales[1]);
+                case 'C':
+                    return movimientoPieza.caballo(coordIniciales[0], coordFinales[0], coordIniciales[1], coordFinales[1]);
+                case 'A':
+                    return movimientoPieza.afil(coordIniciales[0], coordFinales[0], coordIniciales[1], coordFinales[1]);
+                case 'D':
+                    return movimientoPieza.dama(coordIniciales[0], coordFinales[0], coordIniciales[1], coordFinales[1]);
+                case 'R':
+                    return movimientoPieza.rey(coordIniciales[0], coordFinales[0], coordIniciales[1], coordFinales[1]);
+                case 'P':
+                    return movimientoPieza.peon(coordIniciales[0], coordFinales[0], coordIniciales[1], coordFinales[1],
+                        jugadorTurno.isBlanco(), this.comePiezaEnemiga());
+            }
+            return false;
         }
 
         public bool piezasTrayectoria()
@@ -99,7 +118,16 @@ namespace Logica
 
         public bool comePiezaEnemiga()
         {
-            return true;
+            int[] coord = descomponerPosicion(posicionFinal);
+            char? piezaTablero = tablero[coord[0], coord[1]];
+
+            if (piezaTablero != null)
+            {
+                if (pieza < 'Z' && piezaTablero > 'Z') return true;
+
+                if (pieza > 'Z' && piezaTablero < 'Z') return true;
+            }
+            return false;
         }
 
         public bool haceJaque()
