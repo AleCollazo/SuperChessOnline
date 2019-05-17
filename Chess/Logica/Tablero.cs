@@ -8,7 +8,7 @@ namespace Logica
 {
     class Tablero
     {
-        private char?[,] tablero = new char?[8,8];
+        public char?[,] TableroPiezas { get; set; }
         private Comprobaciones comprobaciones;
         private Jugador jugadorBlancas;
         private Jugador jugadorNegras;
@@ -16,6 +16,7 @@ namespace Logica
 
         public Tablero(Jugador jugadorBlancas, Jugador jugadorNegras)
         {
+            TableroPiezas = new char?[8, 8];
             this.jugadorBlancas = jugadorBlancas;
             this.jugadorNegras = jugadorNegras;
             endGame = false;
@@ -24,30 +25,30 @@ namespace Logica
         public void colocarPiezaInicio()
         {
             //Colocar piezas blancas (Mayusculas)
-            tablero[0, 0] = 'T';
-            tablero[1, 0] = 'C';
-            tablero[2, 0] = 'A';
-            tablero[3, 0] = 'D';
-            tablero[4, 0] = 'R';
-            tablero[5, 0] = 'A';
-            tablero[6, 0] = 'C';
-            tablero[7, 0] = 'T';
+            TableroPiezas[0, 0] = 'T';
+            TableroPiezas[1, 0] = 'C';
+            TableroPiezas[2, 0] = 'A';
+            TableroPiezas[3, 0] = 'D';
+            TableroPiezas[4, 0] = 'R';
+            TableroPiezas[5, 0] = 'A';
+            TableroPiezas[6, 0] = 'C';
+            TableroPiezas[7, 0] = 'T';
 
             //Colocar piezas negras (Minusculas)
-            tablero[0, 7] = 't';
-            tablero[1, 7] = 'c';
-            tablero[2, 7] = 'a';
-            tablero[3, 7] = 'd';
-            tablero[4, 7] = 'r';
-            tablero[5, 7] = 'a';
-            tablero[6, 7] = 'c';
-            tablero[7, 7] = 't';
+            TableroPiezas[0, 7] = 't';
+            TableroPiezas[1, 7] = 'c';
+            TableroPiezas[2, 7] = 'a';
+            TableroPiezas[3, 7] = 'd';
+            TableroPiezas[4, 7] = 'r';
+            TableroPiezas[5, 7] = 'a';
+            TableroPiezas[6, 7] = 'c';
+            TableroPiezas[7, 7] = 't';
 
             //Colocar peones
             for (int i = 0; i < 8; i++)
             {
-                tablero[i, 1] = 'P';
-                tablero[i, 6] = 'p';
+                TableroPiezas[i, 1] = 'P';
+                TableroPiezas[i, 6] = 'p';
             }
         }
 
@@ -57,11 +58,11 @@ namespace Logica
         {
             if (turnoBlancas)
             {
-                comprobaciones.setJugada(jugadorBlancas, movimiento, tablero);
+                comprobaciones.setJugada(jugadorBlancas, movimiento, TableroPiezas);
             }
             else
             {
-                comprobaciones.setJugada(jugadorNegras, movimiento, tablero);
+                comprobaciones.setJugada(jugadorNegras, movimiento, TableroPiezas);
             }
 
             //Comprobaciones
@@ -100,5 +101,7 @@ namespace Logica
         {
             return endGame;
         }
+
+        
     }
 }
