@@ -10,6 +10,10 @@ namespace Logica
     {
         public bool peon(int xInicial, int yInicial, int xFinal, int yFinal, bool blanco, bool comePieza)
         {
+            Console.WriteLine();
+            Console.WriteLine("Peon");
+            Console.WriteLine(String.Format("xi {0}  yi {1}  xf{2}   yf{2}",
+                xInicial, yInicial, xFinal, yFinal));
             if (blanco)
             {
                 if (comePieza)
@@ -22,7 +26,7 @@ namespace Logica
                     {
                         return true;
                     }
-                    if (xInicial == xFinal && yFinal - yInicial == 2 && xInicial == 2)
+                    if (xInicial == xFinal && yFinal - yInicial == 2 && yInicial == 1)
                     {
                         return true;
                     }
@@ -40,13 +44,13 @@ namespace Logica
                     {
                         return true;
                     }
-                    if (xInicial == xFinal && yFinal - yInicial == -2 && xInicial == 7)
+                    if (xInicial == xFinal && yFinal - yInicial == -2 && yInicial == 6)
                     {
                         return true;
                     }
                 }
             }
-            return true;
+            return false;
         }
 
         public bool torre(int xInicial, int yInicial, int xFinal, int yFinal)
@@ -77,7 +81,8 @@ namespace Logica
 
         public bool rey(int xInicial, int yInicial, int xFinal, int yFinal)
         {
-            if(Math.Abs(xInicial - xFinal) == 1 || Math.Abs(yInicial - yFinal) == 1) return true;
+            if((Math.Abs(xInicial - xFinal) == 1 && Math.Abs(yInicial - yFinal) < 2) || 
+                (Math.Abs(yInicial - yFinal) == 1 && (Math.Abs(xInicial - xFinal) < 2))) return true;
             return false;
         }
     }

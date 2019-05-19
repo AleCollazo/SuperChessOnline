@@ -14,6 +14,10 @@ namespace Chess
         private string movimiento;
         private bool seleccionadoCuadrado;
         private bool seleccionadaPieza;
+        private bool moverPieza;
+        private bool movimientoCorrecto;
+        private bool piezaMoviada;
+
         private int ladoCuadrado;
         private Vector2[,] posiciones = new Vector2[8,8];
 
@@ -33,7 +37,9 @@ namespace Chess
         private Texture2D damaBlanca;
         private Texture2D damaNegra;
 
-        long tiempo;
+        private long tiempo;
+        private long tiempoMovimiento;
+        private long tiempoSemaforo;
 
         private Juego juego;
 
@@ -47,7 +53,10 @@ namespace Chess
             IsMouseVisible = true;
             seleccionadoCuadrado = false;
             seleccionadaPieza = false;
+            moverPieza = false;
+            piezaMoviada = false;
             juego = new Juego();
+            juego.TurnoBlancas = true;
         }
 
         protected override void Initialize()
@@ -55,6 +64,7 @@ namespace Chess
             base.Initialize();
             juego.iniciarJuego();
             tiempo = DateTime.Now.Ticks;
+            tiempoMovimiento = DateTime.Now.Ticks;
         }
 
         protected override void LoadContent()
@@ -107,12 +117,35 @@ namespace Chess
                 }
             }
 
+            if (moverPieza)
+            {
+                if (DateTime.Now.Ticks - tiempoMovimiento > TimeSpan.TicksPerSecond/3)
+                {
+                    movimientoCorrecto = juego.Tablero.mover(movimiento, true);// juego.TurnoBlancas);
+                    if (movimientoCorrecto) juego.TurnoBlancas = !juego.TurnoBlancas;
+                    //Console.WriteLine("movimiento Correcto: "+movimientoCorrecto);
+                    moverPieza = false;
+                    piezaMoviada = true;
+                    tiempoSemaforo = DateTime.Now.Ticks;
+                }
+            }
+
+            if (piezaMoviada)
+            {
+                if (DateTime.Now.Ticks - tiempoSemaforo > TimeSpan.TicksPerSecond / 3)
+                {
+                    seleccionadoCuadrado = false;
+                    seleccionadaPieza = false;
+                    piezaMoviada = false;
+                }
+            }
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Gray);
             spriteBatch.Begin();
             dibujarTablero();
 
@@ -133,6 +166,17 @@ namespace Chess
                         if (cuadroSelect[0] == i && cuadroSelect[1] == j)
                         {
                             color = Color.Yellow;
+                            if(piezaMoviada)
+                            {
+                                if (movimientoCorrecto)
+                                {
+                                    color = Color.Green;
+                                }
+                                else
+                                {
+                                    color = Color.Red;
+                                }
+                            }
                         }
                     }
                     if (cont % 2 != 0)
@@ -233,7 +277,9 @@ namespace Chess
                                     movimiento,
                                     (char)('A'+i),
                                     j+1);
-                                Console.WriteLine(movimiento);
+                                //Console.WriteLine(movimiento);
+                                moverPieza = true;
+                                tiempoMovimiento = DateTime.Now.Ticks;
                             }
                         }
                         else

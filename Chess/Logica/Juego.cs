@@ -8,7 +8,7 @@ namespace Logica
 {
     class Juego
     {
-        private bool turnoBlancas;
+        public bool TurnoBlancas { get; set; }
         private Tablero tablero;
         public Tablero Tablero
         {

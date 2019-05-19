@@ -16,6 +16,7 @@ namespace Logica
 
         public Tablero(Jugador jugadorBlancas, Jugador jugadorNegras)
         {
+            comprobaciones = new Comprobaciones();
             TableroPiezas = new char?[8, 8];
             this.jugadorBlancas = jugadorBlancas;
             this.jugadorNegras = jugadorNegras;
@@ -74,10 +75,15 @@ namespace Logica
 
             if (!comprobaciones.movimientoCorrectoPieza()) return false;
 
-            if (!comprobaciones.hayPiezaDelJugador()) return false;
+            //Console.WriteLine("movimientoCorrectoPieza");
 
+            if (comprobaciones.hayPiezaDelJugador()) return false;
 
-            if (!comprobaciones.piezasTrayectoria()) return false;
+            //Console.WriteLine("hayPiezaDelJugador");
+
+            if (comprobaciones.piezasTrayectoria()) return false;
+
+            //Console.WriteLine("piezasTrayectoria");
 
             if (comprobaciones.comePiezaEnemiga())
             {
@@ -92,7 +98,7 @@ namespace Logica
                 }
             }
 
-            
+            TableroPiezas = comprobaciones.realizarMovimiento();
 
             return true;
         }
