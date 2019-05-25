@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Logica;
 using System;
+using System.Threading;
 
 namespace Chess
 {
@@ -17,9 +18,13 @@ namespace Chess
         private bool moverPieza;
         private bool movimientoCorrecto;
         private bool piezaMoviada;
+        private bool turnoLocal;
+        private bool seleccionadoCuadroRemoto;
+        private bool seleccionadaPiezaRemota;
 
         private int ladoCuadrado;
         private Vector2[,] posiciones = new Vector2[8,8];
+        private Vector2 posicionTablero;
 
         private Texture2D board;
         private Texture2D cuadradoBlanco;
@@ -40,31 +45,40 @@ namespace Chess
         private long tiempo;
         private long tiempoMovimiento;
         private long tiempoSemaforo;
+        private long tiempoRemoto;
 
         private Juego juego;
 
         private int[] cuadroSelect = new int[2];
         private int[] piezaSelect = new int[2];
 
-        public Game1()
+        private Thread hiloTurno;
+        private static readonly object l = new object();
+
+        public Game1(Juego juego)
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.Window.Title = "SuperChess Online";
+            posicionTablero = new Vector2();
             IsMouseVisible = true;
             seleccionadoCuadrado = false;
             seleccionadaPieza = false;
             moverPieza = false;
             piezaMoviada = false;
-            juego = new Juego();
-            juego.TurnoBlancas = true;
+            this.juego = juego;
+            hiloTurno = new Thread(realizarTurno);
         }
 
         protected override void Initialize()
         {
             base.Initialize();
             juego.iniciarJuego();
+            turnoLocal = juego.JugadorLocal.Blanco;
             tiempo = DateTime.Now.Ticks;
             tiempoMovimiento = DateTime.Now.Ticks;
+            tiempoRemoto = DateTime.Now.Ticks;
+            hiloTurno.Start();
         }
 
         protected override void LoadContent()
@@ -87,57 +101,33 @@ namespace Chess
             damaNegra = this.Content.Load<Texture2D>("queenB2");
             int margin = board.Height / 32;
             ladoCuadrado = (board.Height - margin - margin / 2) / 8;
-            
+            posicionTablero.X = this.Window.ClientBounds.Width/2 - board.Width / 2;
+            posicionTablero.Y = this.Window.ClientBounds.Height/2 - board.Height / 2;
+
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    posiciones[i,j] = new Vector2(margin + i * ladoCuadrado, margin + (7 - j) * ladoCuadrado);
+                    posiciones[i,j] = new Vector2(posicionTablero.X +margin + i * ladoCuadrado, 
+                        posicionTablero.Y + margin + (7 - j) * ladoCuadrado);
                 }
             }
         }
 
         protected override void UnloadContent()
         {
-
+            
         }
+
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            
-            MouseState mouseState = Mouse.GetState();
-            if (DateTime.Now.Ticks - tiempo > TimeSpan.TicksPerSecond/3) {
-                if (ButtonState.Pressed == mouseState.LeftButton)
-                {
-                    seleccionarRaton(mouseState.Position);
-                    tiempo = DateTime.Now.Ticks;
-                }
-            }
-
-            if (moverPieza)
+            if (!juego.Tablero.EndGame)
             {
-                if (DateTime.Now.Ticks - tiempoMovimiento > TimeSpan.TicksPerSecond/3)
-                {
-                    movimientoCorrecto = juego.Tablero.mover(movimiento, true);// juego.TurnoBlancas);
-                    if (movimientoCorrecto) juego.TurnoBlancas = !juego.TurnoBlancas;
-                    //Console.WriteLine("movimiento Correcto: "+movimientoCorrecto);
-                    moverPieza = false;
-                    piezaMoviada = true;
-                    tiempoSemaforo = DateTime.Now.Ticks;
-                }
-            }
-
-            if (piezaMoviada)
-            {
-                if (DateTime.Now.Ticks - tiempoSemaforo > TimeSpan.TicksPerSecond / 3)
-                {
-                    seleccionadoCuadrado = false;
-                    seleccionadaPieza = false;
-                    piezaMoviada = false;
-                }
+                moverPiezaTablero();
             }
 
             base.Update(gameTime);
@@ -153,9 +143,58 @@ namespace Chess
             base.Draw(gameTime);
         }
 
+        protected override void  OnExiting(object sender, EventArgs args)
+        {
+            juego.Tablero.EndGame = true;
+            juego.enviarMovimiento(null);
+            juego.cerrarConexion();
+            base.OnExiting(sender, args);
+        }
+
+        private void realizarTurno()
+        {
+            do
+            {
+                if (!turnoLocal)
+                {
+                    movimiento = juego.recibirMovimiento();
+
+                    if (movimiento != null) {
+                        juego.Tablero.moverRemoto(movimiento);
+                        señalarMovimientoRemoto(movimiento);
+                        turnoLocal = true;
+                    }
+                }
+                else
+                {
+                    lock (l) {
+                        Monitor.Wait(l);
+
+                        juego.enviarMovimiento(movimiento);
+                        turnoLocal = false;
+                    }
+
+                };
+            } while (!juego.Tablero.EndGame && movimiento != null);
+            juego.Tablero.EndGame = true;
+
+            Console.WriteLine("EndGame: {0}", juego.Tablero.EndGame);
+        }
+
+        private void señalarMovimientoRemoto(string movimiento)
+        {
+            piezaSelect[0] = Convert.ToChar(movimiento.Substring(3, 1)) - 'A';
+            piezaSelect[1] = Convert.ToInt32(movimiento.Substring(4, 1)) - 1;
+            seleccionadaPiezaRemota = true;
+            cuadroSelect[0] = Convert.ToChar(movimiento.Substring(1, 1)) - 'A';
+            cuadroSelect[1] = Convert.ToInt32(movimiento.Substring(2, 1)) - 1;
+            seleccionadoCuadroRemoto = true;
+            tiempoRemoto = DateTime.Now.Ticks;
+        }
+
         private void dibujarTablero()
         {
-            spriteBatch.Draw(board, new Vector2(0,0), Color.White);
+            spriteBatch.Draw(board, posicionTablero, Color.White);
             int cont = 0;
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++)
@@ -177,6 +216,13 @@ namespace Chess
                                     color = Color.Red;
                                 }
                             }
+                        }
+                    }
+                    if (seleccionadoCuadroRemoto)
+                    {
+                        if (cuadroSelect[0] == i && cuadroSelect[1] == j)
+                        {
+                            color = Color.Yellow;
                         }
                     }
                     if (cont % 2 != 0)
@@ -243,10 +289,74 @@ namespace Chess
                 {
                     if (i == piezaSelect[0] && j == piezaSelect[1])
                     {
-                        color = Color.Yellow;
+                        if(juego.JugadorLocal.Blanco)color = Color.Yellow;
+                        else color = Color.Red;
+                    }
+                }
+                if (seleccionadaPiezaRemota)
+                {
+                    if (i == piezaSelect[0] && j == piezaSelect[1])
+                    {
+                        if (!juego.JugadorLocal.Blanco) color = Color.Yellow;
+                        else color = Color.Red;
                     }
                 }
                 spriteBatch.Draw(imagenPieza, posiciones[i, j], color);
+            }
+        }
+
+        private void moverPiezaTablero()
+        {
+            MouseState mouseState = Mouse.GetState();
+            if (DateTime.Now.Ticks - tiempo > TimeSpan.TicksPerSecond / 3)
+            {
+                if (ButtonState.Pressed == mouseState.LeftButton && turnoLocal)
+                {
+                    seleccionarRaton(mouseState.Position);
+                    tiempo = DateTime.Now.Ticks;
+                }
+
+            }
+
+
+            if (moverPieza)
+            {
+                if (DateTime.Now.Ticks - tiempoMovimiento > TimeSpan.TicksPerSecond / 3
+                    && movimiento != null)
+                {
+
+                    movimientoCorrecto = juego.Tablero.mover(movimiento, juego.JugadorLocal.Blanco);
+
+                    if (movimientoCorrecto)
+                    {
+                        lock (l)
+                        {
+                            Monitor.Pulse(l);
+                        }
+                    }
+                    moverPieza = false;
+                    piezaMoviada = true;
+                    tiempoSemaforo = DateTime.Now.Ticks;
+                }
+            }
+
+            if (piezaMoviada)
+            {
+                if (DateTime.Now.Ticks - tiempoSemaforo > TimeSpan.TicksPerSecond / 3)
+                {
+                    seleccionadoCuadrado = false;
+                    seleccionadaPieza = false;
+                    piezaMoviada = false;
+                }
+            }
+
+            if (seleccionadaPiezaRemota)
+            {
+                if (DateTime.Now.Ticks - tiempoRemoto > TimeSpan.TicksPerSecond)
+                {
+                    seleccionadoCuadroRemoto = false;
+                    seleccionadaPiezaRemota = false;
+                }
             }
         }
 
@@ -273,24 +383,28 @@ namespace Chess
                                 cuadroSelect[0] = i;
                                 cuadroSelect[1] = j;
                                 seleccionadoCuadrado = true;
-                                movimiento = String.Format("{0}{1}{2}",
+                                movimiento = string.Format("{0}{1}{2}",
                                     movimiento,
                                     (char)('A'+i),
                                     j+1);
-                                //Console.WriteLine(movimiento);
                                 moverPieza = true;
                                 tiempoMovimiento = DateTime.Now.Ticks;
                             }
                         }
                         else
                         {
-                            piezaSelect[0] = i;
-                            piezaSelect[1] = j;
-                            seleccionadaPieza = true;
-                            movimiento = String.Format("{0}{1}{2}",
-                                    juego.Tablero.TableroPiezas[i, j],
-                                    (char)('A' + i),
-                                    j + 1);
+                            if (juego.Tablero.TableroPiezas[i, j] != null) {
+                                if ((juego.JugadorLocal.Blanco && juego.Tablero.TableroPiezas[i, j] < 'Z') ||
+                                    (!juego.JugadorLocal.Blanco && juego.Tablero.TableroPiezas[i, j] > 'Z')) {
+                                    piezaSelect[0] = i;
+                                    piezaSelect[1] = j;
+                                    seleccionadaPieza = true;
+                                    movimiento = string.Format("{0}{1}{2}",
+                                            juego.Tablero.TableroPiezas[i, j],
+                                            (char)('A' + i),
+                                            j + 1);
+                                }
+                            }
                         }
                     }
                 }

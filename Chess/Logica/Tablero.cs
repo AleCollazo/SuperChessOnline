@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Logica
 {
-    class Tablero
+    public class Tablero
     {
         public char?[,] TableroPiezas { get; set; }
         private Comprobaciones comprobaciones;
         private Jugador jugadorBlancas;
         private Jugador jugadorNegras;
-        private bool endGame;
+        public bool EndGame { get; set; }
 
         public Tablero(Jugador jugadorBlancas, Jugador jugadorNegras)
         {
@@ -20,7 +20,7 @@ namespace Logica
             TableroPiezas = new char?[8, 8];
             this.jugadorBlancas = jugadorBlancas;
             this.jugadorNegras = jugadorNegras;
-            endGame = false;
+            EndGame = false;
         }
 
         public void colocarPiezaInicio()
@@ -53,7 +53,11 @@ namespace Logica
             }
         }
 
-        
+        public void moverRemoto(string movimiento)
+        {
+            comprobaciones.setJugadaRemota(movimiento, TableroPiezas);
+            TableroPiezas = comprobaciones.realizarMovimientoRemoto();
+        }
 
         public bool mover(string movimiento, bool turnoBlancas)
         {
@@ -94,7 +98,7 @@ namespace Logica
             {
                 if (comprobaciones.haceJaqueMate())
                 {
-                    endGame = true;
+                    //EndGame = true;
                 }
             }
 
@@ -102,12 +106,5 @@ namespace Logica
 
             return true;
         }
-
-        public bool isEndGame()
-        {
-            return endGame;
-        }
-
-        
     }
 }

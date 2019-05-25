@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Logica
 {
-    class MovimientoPieza
+    public class MovimientoPieza
     {
         public bool peon(int xInicial, int yInicial, int xFinal, int yFinal, bool blanco, bool comePieza)
         {
-            Console.WriteLine();
-            Console.WriteLine("Peon");
-            Console.WriteLine(String.Format("xi {0}  yi {1}  xf{2}   yf{2}",
-                xInicial, yInicial, xFinal, yFinal));
+            //Console.WriteLine();
+            //Console.WriteLine("Peon");
+            //Console.WriteLine(String.Format("xi {0}  yi {1}  xf{2}   yf{2}",
+              //  xInicial, yInicial, xFinal, yFinal));
             if (blanco)
             {
                 if (comePieza)

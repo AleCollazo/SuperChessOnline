@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Logica
 {
-    class Comprobaciones
+    public class Comprobaciones
     {
         private MovimientoPieza movimientoPieza;
         private Jugador jugadorTurno;
@@ -23,9 +23,9 @@ namespace Logica
 
         private void descomponerMovimiento()
         {
-            pieza = Convert.ToChar(movimiento.Substring(0,1));
-            posicionInicial = movimiento.Substring(1,2);
-            posicionFinal = movimiento.Substring(3,2);
+                pieza = Convert.ToChar(movimiento.Substring(0, 1));
+                posicionInicial = movimiento.Substring(1, 2);
+                posicionFinal = movimiento.Substring(3, 2);
         }
 
         private int[] descomponerPosicion(string posicion)
@@ -40,16 +40,6 @@ namespace Logica
             return coordenadas;
         }
 
-        public bool esUnaPiezaDelJugador()
-        {
-            if (jugadorTurno.isBlanco())
-            {
-                if (pieza < 'Z') return true;
-                return false;
-            }
-            if (pieza > 'Z') return true;
-            return false;
-        }
 
         public bool hayPiezaDelJugador()
         {
@@ -71,7 +61,8 @@ namespace Logica
             int[] coordFinales = descomponerPosicion(posicionFinal);
 
             //Console.WriteLine();
-            //Console.WriteLine("MovimientoCorrectoPieza:");
+            //Console.WriteLine("x inicial: {0}    x final: {1}", coordIniciales[0], coordFinales[0]);
+            //Console.WriteLine("y inicial: {0}    y final: {1}", coordIniciales[1], coordFinales[1]);
             //Console.WriteLine("pieza "+ pieza);
 
             switch (pieza)
@@ -94,7 +85,7 @@ namespace Logica
                 case 'P':
                 case 'p':
                     return movimientoPieza.peon(coordIniciales[0], coordIniciales[1], coordFinales[0], coordFinales[1],
-                        jugadorTurno.isBlanco(), this.comePiezaEnemiga());
+                        pieza == 'P', this.comePiezaEnemiga());
             }
             return false;
         }
@@ -113,7 +104,7 @@ namespace Logica
                 if (Math.Abs(coordInicio[0] - coordFinal[0]) == Math.Abs(coordInicio[1] - coordFinal[1]))
                 {
                     int j;
-                    Console.WriteLine("Dentro diagonal");
+                    //Console.WriteLine("Dentro diagonal");
                     if ((coordInicio[0] - coordFinal[0]) == (coordInicio[1] - coordFinal[1]))
                     {
                         iInicio = coordInicio[0];
@@ -121,16 +112,16 @@ namespace Logica
                         j = coordInicio[1] ;
                         for (int i = iInicio + 1; i < iFinal; i++)
                         {
-                            Console.WriteLine("i {0}", i);
-                            Console.WriteLine("Diagonal deracha-arriba: {0}", tablero[i, i] != null);
+                            //Console.WriteLine("i {0}", i);
+                           // Console.WriteLine("Diagonal deracha-arriba: {0}", tablero[i, i] != null);
                             j++;
                             if (tablero[i, j] != null) return true;
                             
                         }
                         for (int i = iInicio - 1; i > iFinal; i--)
                         {
-                            Console.WriteLine("i {0}", i);
-                            Console.WriteLine("Diagonal izquierda-abajo: {0}", tablero[i, i] != null);
+                            //Console.WriteLine("i {0}", i);
+                           // Console.WriteLine("Diagonal izquierda-abajo: {0}", tablero[i, i] != null);
                             j--;
                             if (tablero[i, j] != null) return true;
                         }
@@ -142,14 +133,14 @@ namespace Logica
                         j = coordInicio[1];
                         for (int i = iInicio + 1; i < iFinal; i++)
                         {
-                            Console.WriteLine("Diagonal deracha-abajo: {0}", tablero[i, coordInicio[1] - i] != null);
+                            //Console.WriteLine("Diagonal deracha-abajo: {0}", tablero[i, coordInicio[1] - i] != null);
                             j--;
                             if (tablero[i, j] != null) return true;
                         }
                         for (int i = iInicio - 1; i > iFinal; i--)
                         {
-                            Console.WriteLine("i {0} coordInicio {1}", i, coordInicio[1] + i);
-                            Console.WriteLine("Diagonal izquierda-arriba: {0}", tablero[i, coordInicio[1] + i] != null);
+                           // Console.WriteLine("i {0} coordInicio {1}", i, coordInicio[1] + i);
+                            //Console.WriteLine("Diagonal izquierda-arriba: {0}", tablero[i, coordInicio[1] + i] != null);
                             j++;
                             if (tablero[i, j] != null) return true;
                         }
@@ -158,37 +149,37 @@ namespace Logica
                 }
                 else
                 {
-                    Console.WriteLine("Dentro lineal");
+                  //  Console.WriteLine("Dentro lineal");
                     if (coordInicio[0] == coordFinal[0])
                     {
-                        Console.WriteLine("Dentro vertical");
+                     //   Console.WriteLine("Dentro vertical");
                         iInicio = coordInicio[1];
                         iFinal = coordFinal[1];
                         for (int i = iInicio + 1; i < iFinal; i++)
                         {
-                            Console.WriteLine("Vertical arriba: {0}", tablero[coordInicio[0], i] != null);
+                     //       Console.WriteLine("Vertical arriba: {0}", tablero[coordInicio[0], i] != null);
                             if (tablero[coordInicio[0], i] != null) return true;
                         }
                         for (int i = iInicio - 1; i > iFinal; i--)
                         {
-                            Console.WriteLine("Vertical abajo: {0}", tablero[coordInicio[0], i] != null);
+                     //       Console.WriteLine("Vertical abajo: {0}", tablero[coordInicio[0], i] != null);
                             if (tablero[coordInicio[0], i] != null) return true;
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Dentro horizontal");
+                     //   Console.WriteLine("Dentro horizontal");
                         iInicio = coordInicio[0];
                         iFinal = coordFinal[0];
                         for (int i = iInicio + 1; i < iFinal; i++)
                         {
-                            Console.WriteLine("Derecha: {0}", tablero[i, coordInicio[1]] != null);
+                   //         Console.WriteLine("Derecha: {0}", tablero[i, coordInicio[1]] != null);
                             if (tablero[i, coordInicio[1]] != null) return true;
                         }
                         for (int i = iInicio - 1; i > iFinal; i--)
                         {
-                            Console.WriteLine("Izquierda: {0}", tablero[i, coordInicio[1]] != null);
-                            Console.WriteLine("i {0} coordInicio {1}", i, coordInicio[1]);
+                         //   Console.WriteLine("Izquierda: {0}", tablero[i, coordInicio[1]] != null);
+                         //   Console.WriteLine("i {0} coordInicio {1}", i, coordInicio[1]);
                             if (tablero[i, coordInicio[1]] != null) return true;
                         }
                     }
@@ -218,7 +209,7 @@ namespace Logica
             {
                 for(int j = 0; j < 8; j++)
                 {
-                    if(tablero[i,j] != null && (jugadorTurno.isBlanco() & (tablero[i,j] < 'Z')))
+                    if(tablero[i,j] != null && (jugadorTurno.Blanco & (tablero[i,j] < 'Z')))
                     {
 
                     }
@@ -251,6 +242,22 @@ namespace Logica
         }
 
         public char?[,] realizarMovimiento()
+        {
+            int[] coordIniciales = descomponerPosicion(posicionInicial);
+            int[] coordFinales = descomponerPosicion(posicionFinal);
+            tablero[coordIniciales[0], coordIniciales[1]] = null;
+            tablero[coordFinales[0], coordFinales[1]] = pieza;
+            return tablero;
+        }
+
+        public void setJugadaRemota(string movimiento, char?[,] tablero)
+        {
+            this.movimiento = movimiento;
+            this.tablero = tablero;
+            descomponerMovimiento();
+        }
+
+        public char?[,] realizarMovimientoRemoto()
         {
             int[] coordIniciales = descomponerPosicion(posicionInicial);
             int[] coordFinales = descomponerPosicion(posicionFinal);

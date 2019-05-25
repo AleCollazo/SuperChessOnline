@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Logica
 {
-    class Jugador
+    public class Jugador
     {
         private bool jaque;
         private bool jaqueMate;
         private bool enroqueCorto;
         private bool enroqueLargo;
         private bool local;
-        private bool blanco;
+        public bool Blanco { get; }
 
         public Jugador(bool blanco, bool local)
         {
             this.local = local;
-            this.blanco = blanco;
+            this.Blanco = blanco;
         }
 
         public void setJaque(bool jaque)
@@ -39,16 +39,6 @@ namespace Logica
         public void setEnroqueLargo(bool enroqueLargo)
         {
             this.enroqueLargo = enroqueLargo;
-        }
-
-        public bool isBlanco()
-        {
-            return blanco;
-        }
-
-        public bool isLocal()
-        {
-            return local;
         }
     }
 }

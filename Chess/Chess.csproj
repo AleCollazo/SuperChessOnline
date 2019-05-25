@@ -41,13 +41,35 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Formularios\FrmEsperandoConexion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\FrmEsperandoConexion.Designer.cs">
+      <DependentUpon>FrmEsperandoConexion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\FrmNuevaPartida.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\FrmNuevaPartida.Designer.cs">
+      <DependentUpon>FrmNuevaPartida.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formularios\FrmUnirsePartida.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\FrmUnirsePartida.Designer.cs">
+      <DependentUpon>FrmUnirsePartida.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logica\Comprobaciones.cs" />
-    <Compile Include="Cuadrado.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Logica\Juego.cs" />
     <Compile Include="Logica\Jugador.cs" />
     <Compile Include="Logica\MovimientoPieza.cs" />
-    <Compile Include="Pieza.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logica\Tablero.cs" />
@@ -57,6 +79,9 @@
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +90,20 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Formularios\FrmEsperandoConexion.resx">
+      <DependentUpon>FrmEsperandoConexion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\FrmNuevaPartida.resx">
+      <DependentUpon>FrmNuevaPartida.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\FrmUnirsePartida.resx">
+      <DependentUpon>FrmUnirsePartida.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

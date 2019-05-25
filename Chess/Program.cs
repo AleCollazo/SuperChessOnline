@@ -1,21 +1,29 @@
-﻿using System;
+﻿using Logica;
+using System;
+using System.Windows.Forms;
 
 namespace Chess
 {
 #if WINDOWS || LINUX
-    /// <summary>
-    /// The main class.
-    /// </summary>
+
     public static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static bool conexionCorrecta = false;
+
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
-                game.Run();
+            Juego juego = new Juego();
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1(juego));
+
+            if (conexionCorrecta)
+            {
+                using (var game = new Game1(juego))
+                    game.Run();
+            }
         }
     }
 #endif
