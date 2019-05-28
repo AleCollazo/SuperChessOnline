@@ -55,6 +55,7 @@ namespace Logica
 
         public void moverRemoto(string movimiento)
         {
+            Console.WriteLine("MOVER REMOTO {0}", movimiento);
             comprobaciones.setJugadaRemota(movimiento, TableroPiezas);
             TableroPiezas = comprobaciones.realizarMovimientoRemoto();
         }

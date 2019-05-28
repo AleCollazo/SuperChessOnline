@@ -238,7 +238,8 @@ namespace Logica
             this.jugadorTurno = jugadorTurno;
             this.movimiento = movimiento;
             this.tablero = tablero;
-            descomponerMovimiento();
+            Console.WriteLine("MOVIMIENTO {0}", movimiento);
+            if (movimiento != null)descomponerMovimiento();
         }
 
         public char?[,] realizarMovimiento()
@@ -254,7 +255,8 @@ namespace Logica
         {
             this.movimiento = movimiento;
             this.tablero = tablero;
-            descomponerMovimiento();
+            Console.WriteLine("MOVIMIENTO REMOTO{0}", movimiento);
+            if (movimiento != null) descomponerMovimiento();
         }
 
         public char?[,] realizarMovimientoRemoto()

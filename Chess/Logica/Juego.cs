@@ -41,22 +41,29 @@ namespace Logica
             {
                 return sr.ReadLine();
             }
-            catch (IOException)
+            catch (IOException e)
             {
-
+                Console.WriteLine(e.Message);
             }
-            catch (ObjectDisposedException)
-            {
-
+            catch (ObjectDisposedException e)
+            { 
+                Console.WriteLine(e.Message);
             }
             return null;
         }
 
         public void enviarMovimiento(string movimiento)
         {
-            sw.WriteLine(movimiento);
-
-            sw.Flush();
+            try
+            {
+                sw.WriteLine(movimiento);
+            
+                sw.Flush();
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         public void cerrarConexion()

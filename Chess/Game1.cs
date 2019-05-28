@@ -21,10 +21,13 @@ namespace Chess
         private bool turnoLocal;
         private bool seleccionadoCuadroRemoto;
         private bool seleccionadaPiezaRemota;
+        private bool abandono;
 
         private int ladoCuadrado;
         private Vector2[,] posiciones = new Vector2[8,8];
         private Vector2 posicionTablero;
+        private Vector2 posicionTexto;
+        private string texto;
 
         private Texture2D board;
         private Texture2D cuadradoBlanco;
@@ -41,6 +44,7 @@ namespace Chess
         private Texture2D reyNegro;
         private Texture2D damaBlanca;
         private Texture2D damaNegra;
+        private SpriteFont fuente;
 
         private long tiempo;
         private long tiempoMovimiento;
@@ -61,6 +65,7 @@ namespace Chess
             Content.RootDirectory = "Content";
             this.Window.Title = "SuperChess Online";
             posicionTablero = new Vector2();
+            posicionTexto = new Vector2();
             IsMouseVisible = true;
             seleccionadoCuadrado = false;
             seleccionadaPieza = false;
@@ -75,6 +80,7 @@ namespace Chess
             base.Initialize();
             juego.iniciarJuego();
             turnoLocal = juego.JugadorLocal.Blanco;
+            abandono = false;
             tiempo = DateTime.Now.Ticks;
             tiempoMovimiento = DateTime.Now.Ticks;
             tiempoRemoto = DateTime.Now.Ticks;
@@ -99,6 +105,10 @@ namespace Chess
             reyNegro = this.Content.Load<Texture2D>("kingB2");
             damaBlanca = this.Content.Load<Texture2D>("queenW2");
             damaNegra = this.Content.Load<Texture2D>("queenB2");
+            fuente = this.Content.Load<SpriteFont>("Font");
+            texto = "Abandono del rival de la partida";
+            posicionTexto.X = this.Window.ClientBounds.Width / 2 - fuente.MeasureString(texto).X/2;
+            posicionTexto.Y =  this.Window.ClientBounds.Height / 2 - fuente.MeasureString(texto).Y/2;
             int margin = board.Height / 32;
             ladoCuadrado = (board.Height - margin - margin / 2) / 8;
             posicionTablero.X = this.Window.ClientBounds.Width/2 - board.Width / 2;
@@ -138,6 +148,7 @@ namespace Chess
             GraphicsDevice.Clear(Color.Gray);
             spriteBatch.Begin();
             dibujarTablero();
+            if (abandono) spriteBatch.DrawString(fuente, texto, posicionTexto, Color.DarkRed);
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -158,11 +169,16 @@ namespace Chess
                 if (!turnoLocal)
                 {
                     movimiento = juego.recibirMovimiento();
-
-                    if (movimiento != null) {
+                    Console.WriteLine("MOVIMIENTO RECIBIR mod{0}", movimiento);
+                    //Console.WriteLine("MOVIMIENTO RECIBIR lengt {0}", movimiento.Length);
+                    if (movimiento != null && movimiento != "") {
                         juego.Tablero.moverRemoto(movimiento);
                         señalarMovimientoRemoto(movimiento);
                         turnoLocal = true;
+                    }
+                    else
+                    {
+                        abandono = true;
                     }
                 }
                 else
@@ -175,7 +191,7 @@ namespace Chess
                     }
 
                 };
-            } while (!juego.Tablero.EndGame && movimiento != null);
+            } while (!juego.Tablero.EndGame && movimiento != null && movimiento != "");
             juego.Tablero.EndGame = true;
 
             Console.WriteLine("EndGame: {0}", juego.Tablero.EndGame);
@@ -322,7 +338,7 @@ namespace Chess
             if (moverPieza)
             {
                 if (DateTime.Now.Ticks - tiempoMovimiento > TimeSpan.TicksPerSecond / 3
-                    && movimiento != null)
+                    && movimiento != null && movimiento != "")
                 {
 
                     movimientoCorrecto = juego.Tablero.mover(movimiento, juego.JugadorLocal.Blanco);

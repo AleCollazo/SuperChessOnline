@@ -49,6 +49,13 @@
 /processorParam:TextureFormat=Color
 /build:board.png
 
+#begin File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:File.spritefont;Font.spritefont
+
 #begin icon.png
 /importer:TextureImporter
 /processor:TextureProcessor
